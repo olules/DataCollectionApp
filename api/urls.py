@@ -11,6 +11,8 @@ urlpatterns = [
     path('land/<int:pk>/', views.LandDetail.as_view()),
     path('building/', views.ConstructionBuildingList.as_view()),
     path('building/<int:pk>/', views.ConstructionBuildingDetail.as_view()),
+     path('trees/', views.TreeList.as_view()),
+    path('trees/<int:pk>/', views.TreeDetail.as_view()),
     path('pap/', views.ProjectAffectedPersonList.as_view()),
     path('pap/<int:pk>/', views.ProjectAffectedPersonDetail.as_view()),
 ]

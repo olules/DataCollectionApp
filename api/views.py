@@ -125,6 +125,16 @@ class ConstructionBuildingDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ConstructionBuilding.objects.all()
     serializer_class = ConstructionBuildingSerializer
 
+#Construction
+class TreeList(generics.ListCreateAPIView):
+    queryset = Tree.objects.all()
+    serializer_class = TreeSerializer
+
+
+class ConstructionBuildingDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Tree.objects.all()
+    serializer_class = TreeSerializer
+
 #projected affected person
 class ProjectAffectedPersonList(generics.ListCreateAPIView):
     queryset = ProjectAffectedPerson.objects.all()

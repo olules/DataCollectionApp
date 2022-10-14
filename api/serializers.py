@@ -22,6 +22,11 @@ class ConstructionBuildingSerializer(serializers.ModelSerializer):
         model = ConstructionBuilding
         fields = ['name', 'description','price']
 
+class TreeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tree
+        fields = ['name']
+
 class ProjectAffectedPersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectAffectedPerson
