@@ -5,27 +5,27 @@ from .models import *
 class CropSerializer(serializers.ModelSerializer):
     class Meta:
         model = Crop
-        fields = ['name']
+        fields = ['name', 'description', 'quality', 'price', 'rating']
 
 class SubcategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Subcategory
-        fields = ['name']
+        fields = ['name', 'crops']
 
 class LandSerializer(serializers.ModelSerializer):
     class Meta:
         model = Land
-        fields = ['name']
+        fields = ['name', 'description', 'price']
 
 class ConstructionBuildingSerializer(serializers.ModelSerializer):
     class Meta:
         model = ConstructionBuilding
-        fields = ['name']
+        fields = ['name', 'description','price']
 
 class ProjectAffectedPersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectAffectedPerson
-        fields = ['first_name', 'last_name', 'age', 'National_id_no', 'email', 
-        'address', 'location', 'phone_number', 'crops', 'land', 'construction']
+        fields = ['first_name', 'last_name', 'age', 'address', 'id_no', 
+        'email','phone_number', 'type_of_crops', 'quantity_of_crops', 'construction_type','date']
 
 

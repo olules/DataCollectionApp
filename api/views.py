@@ -130,6 +130,9 @@ class ProjectAffectedPersonList(generics.ListCreateAPIView):
     queryset = ProjectAffectedPerson.objects.all()
     serializer_class = ProjectAffectedPersonSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 
 class ProjectAffectedPersonDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ProjectAffectedPerson.objects.all()
