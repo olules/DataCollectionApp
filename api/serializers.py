@@ -31,6 +31,6 @@ class ProjectAffectedPersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectAffectedPerson
         fields = ['first_name', 'last_name', 'age', 'address', 'id_no', 
-        'email','phone_number', 'type_of_crops', 'quantity_of_crops', 'construction_type','date']
+        'email','phone_number', 'trees','type_of_crops', 'quantity_of_crops', 'construction_type','date']
 
 
