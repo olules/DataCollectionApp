@@ -131,7 +131,7 @@ class TreeList(generics.ListCreateAPIView):
     serializer_class = TreeSerializer
 
 
-class ConstructionBuildingDetail(generics.RetrieveUpdateDestroyAPIView):
+class TreeDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Tree.objects.all()
     serializer_class = TreeSerializer
 
