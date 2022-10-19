@@ -9,6 +9,62 @@ from rest_framework import generics
 
 
 
+# Create your views here.
+# Category
+class CategoryList(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Category.objects.all()
+    serializer_class = SubcategorySerializer
+
+#Subcategory
+class SubcategoryList(APIView):
+    """
+    List all subcategories, or create a subcategory.
+    """
+    def get(self, request, format=None):
+        subcategory = Subcategory.objects.all()
+        serializer = SubcategorySerializer(subcategory, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = SubcategorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class SubcategoryDetail(APIView):
+    """
+    Retrieve, update or delete a subcategory instance.
+    """
+    def get_object(self, pk):
+        try:
+            return Subcategory.objects.get(pk=pk)
+        except Subcategory.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        subcategory = self.get_object(pk)
+        serializer = SubcategorySerializer(subcategory)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        subcategory = self.get_object(pk)
+        serializer = SubcategorySerializer(subcategory, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        subcategory = self.get_object(pk)
+        subcategory.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 
 
@@ -58,51 +114,6 @@ class CropDetail(APIView):
         crop.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-#Subcategory
-class SubcategoryList(APIView):
-    """
-    List all subcategories, or create a subcategory.
-    """
-    def get(self, request, format=None):
-        subcategory = Subcategory.objects.all()
-        serializer = SubcategorySerializer(subcategory, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, format=None):
-        serializer = SubcategorySerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class SubcategoryDetail(APIView):
-    """
-    Retrieve, update or delete a subcategory instance.
-    """
-    def get_object(self, pk):
-        try:
-            return Subcategory.objects.get(pk=pk)
-        except Subcategory.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        subcategory = self.get_object(pk)
-        serializer = SubcategorySerializer(subcategory)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        subcategory = self.get_object(pk)
-        serializer = SubcategorySerializer(subcategory, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        subcategory = self.get_object(pk)
-        subcategory.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 #Land

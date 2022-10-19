@@ -1,8 +1,9 @@
 from django.contrib import admin
-from .models import Crop, Subcategory, Land, Tree, ProjectAffectedPerson, ConstructionBuilding
+from .models import Category,Crop, Subcategory, Land, Tree, ProjectAffectedPerson, ConstructionBuilding
 
 
 #Register your models here.
+admin.site.register(Category)
 admin.site.register(Crop)
 admin.site.register(Subcategory)
 admin.site.register(Land)
