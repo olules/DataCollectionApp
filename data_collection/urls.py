@@ -22,7 +22,7 @@ from dj_rest_auth.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('api.urls')),
+    path('', include('api.urls')),
     path('api-auth/', include('rest_framework.urls')),
     path('password/reset/confirm/<uidb64>/<token>',PasswordResetConfirmView.as_view(),
         name='password_reset_confirm'),
