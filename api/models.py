@@ -80,7 +80,6 @@ class ProjectAffectedPerson(models.Model):
     phone_number = models.PositiveIntegerField()
     trees = models.ForeignKey(Tree, on_delete=models.CASCADE, related_name='trees')
     crops = models.CharField(max_length=13, choices = CROPS)
-    quantity_of_crops = models.PositiveIntegerField()
     type_of_land = models.ForeignKey(Land, on_delete=models.CASCADE, related_name='lands')
     construction_type = models.ForeignKey(ConstructionBuilding, on_delete=models.CASCADE, related_name='construction')
     created = models.DateTimeField(auto_now_add=True)
@@ -103,6 +102,7 @@ class Crop(models.Model):
     subcategory = models.ForeignKey(Subcategory,related_name='subcategories',on_delete=models.CASCADE)
     name = models.CharField(max_length=60)
     description = models.TextField(max_length=256, blank=True, null=True)
+    quantity = models.PositiveIntegerField()
     quality = models.CharField(max_length=13, choices = QUALITY_CHOICES)
     price = models.PositiveIntegerField(null=True, blank=True)
     rating = models.PositiveIntegerField(null=True, blank=True)
@@ -110,7 +110,7 @@ class Crop(models.Model):
     owner = models.ForeignKey('auth.User', related_name='users', on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} {self.pap} {self.quantity}"
 
 
 

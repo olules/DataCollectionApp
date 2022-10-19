@@ -4,8 +4,7 @@ from api.serializers import *
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework import generics
+from rest_framework import status, generics, renderers
 
 
 
@@ -86,6 +85,30 @@ class CropList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+#projected affected person
+class ProjectAffectedPersonList(generics.ListCreateAPIView):
+    queryset = ProjectAffectedPerson.objects.all()
+    serializer_class = ProjectAffectedPersonSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
+class ProjectAffectedPersonDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ProjectAffectedPerson.objects.all()
+    serializer_class = ProjectAffectedPersonSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+        
+class ProjectAffectedPersonHighlight(generics.GenericAPIView):
+    queryset = ProjectAffectedPerson.objects.all()
+    renderer_classes = [renderers.StaticHTMLRenderer]
+
+    def get(self, request, *args, **kwargs):
+        pap = self.get_object()
+        return Response(pap.highlighted)
+
 class CropDetail(APIView):
     """
     Retrieve, update or delete a crop instance.
@@ -146,15 +169,4 @@ class TreeDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Tree.objects.all()
     serializer_class = TreeSerializer
 
-#projected affected person
-class ProjectAffectedPersonList(generics.ListCreateAPIView):
-    queryset = ProjectAffectedPerson.objects.all()
-    serializer_class = ProjectAffectedPersonSerializer
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
-
-class ProjectAffectedPersonDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = ProjectAffectedPerson.objects.all()
-    serializer_class = ProjectAffectedPersonSerializer

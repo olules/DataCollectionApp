@@ -12,12 +12,6 @@ class SubcategorySerializer(serializers.ModelSerializer):
         model = Subcategory
         fields = ['category', 'name', 'slug']
 
-class CropSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Crop
-        fields = ['name', 'description', 'quality', 'price', 'rating']
-
-
 class LandSerializer(serializers.ModelSerializer):
     class Meta:
         model = Land
@@ -34,9 +28,38 @@ class TreeSerializer(serializers.ModelSerializer):
         fields = ['name']
 
 class ProjectAffectedPersonSerializer(serializers.ModelSerializer):
+    trees = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='name'
+    )
+
+    type_of_land = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='name'
+    )
+
+    construction_type = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='name'
+    )
+    
     class Meta:
         model = ProjectAffectedPerson
         fields = ['first_name', 'last_name', 'age', 'address', 'id_no', 
-        'email','phone_number', 'trees','type_of_crops', 'quantity_of_crops', 'type_of_land','construction_type','created', 'updated']
+        'email','phone_number', 'trees','crops', 'type_of_land','construction_type','created', 'updated']
+
+    
+class CropSerializer(serializers.ModelSerializer):
+    pap = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='first_name'
+    )
+    class Meta:
+        model = Crop
+        fields = ['name', 'description', 'quantity','quality', 'price', 'rating', 'pap']
+
+    
+
+
 
 
