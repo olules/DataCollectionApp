@@ -76,7 +76,7 @@ class ProjectAffectedPerson(models.Model):
     age = models.PositiveIntegerField()
     address = models.CharField(max_length=128)
     id_no = models.CharField(max_length=100, unique=True)
-    email = models.EmailField(max_length=20)
+    email = models.EmailField(max_length=20, unique=True)
     phone_number = models.PositiveIntegerField()
     trees = models.ForeignKey(Tree, on_delete=models.CASCADE, related_name='trees')
     crops = models.CharField(max_length=13, choices = CROPS)
