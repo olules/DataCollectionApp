@@ -75,7 +75,7 @@ class ProjectAffectedPerson(models.Model):
     last_name = models.CharField(max_length=50)
     age = models.PositiveIntegerField()
     address = models.CharField(max_length=128)
-    id_no = models.CharField(max_length=100)
+    id_no = models.CharField(max_length=100, unique=True)
     email = models.EmailField(max_length=20)
     phone_number = models.PositiveIntegerField()
     trees = models.ForeignKey(Tree, on_delete=models.CASCADE, related_name='trees')

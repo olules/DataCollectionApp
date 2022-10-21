@@ -94,30 +94,7 @@ class CropList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#projected affected person
-class ProjectAffectedPersonList(generics.ListCreateAPIView):
-    queryset = ProjectAffectedPerson.objects.all()
-    serializer_class = ProjectAffectedPersonSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
-
-class ProjectAffectedPersonDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = ProjectAffectedPerson.objects.all()
-    serializer_class = ProjectAffectedPersonSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-        
-class ProjectAffectedPersonHighlight(generics.GenericAPIView):
-    queryset = ProjectAffectedPerson.objects.all()
-    renderer_classes = [renderers.StaticHTMLRenderer]
-
-    def get(self, request, *args, **kwargs):
-        pap = self.get_object()
-        return Response(pap.highlighted)
+   
 
 class CropDetail(APIView):
     """
@@ -146,6 +123,32 @@ class CropDetail(APIView):
         crop = self.get_object(pk)
         crop.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+#projected affected person
+class ProjectAffectedPersonList(generics.ListCreateAPIView):
+    queryset = ProjectAffectedPerson.objects.all()
+    serializer_class = ProjectAffectedPersonSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
+class ProjectAffectedPersonDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ProjectAffectedPerson.objects.all()
+    serializer_class = ProjectAffectedPersonSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+        
+class ProjectAffectedPersonHighlight(generics.GenericAPIView):
+    queryset = ProjectAffectedPerson.objects.all()
+    renderer_classes = [renderers.StaticHTMLRenderer]
+
+    def get(self, request, *args, **kwargs):
+        pap = self.get_object()
+        return Response(pap.highlighted)
+
 
 
 

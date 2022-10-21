@@ -29,29 +29,29 @@ class TreeSerializer(serializers.ModelSerializer):
 
 class ProjectAffectedPersonSerializer(serializers.ModelSerializer):
     trees = serializers.SlugRelatedField(
-        read_only=True,
-        slug_field='name'
+        queryset = Tree.objects.all(),
+        slug_field='name',
     )
 
     type_of_land = serializers.SlugRelatedField(
-        read_only=True,
+        queryset = Land.objects.all(),
         slug_field='name'
     )
 
     construction_type = serializers.SlugRelatedField(
-        read_only=True,
+        queryset = ConstructionBuilding.objects.all(),
         slug_field='name'
     )
     
     class Meta:
         model = ProjectAffectedPerson
-        fields = ['first_name', 'last_name', 'age', 'address', 'id_no', 
-        'email','phone_number', 'trees','crops', 'type_of_land','construction_type','created', 'updated']
+        fields = ['first_name', 'last_name', 'age', 'address', 'id_no', 'email','phone_number', 
+        'trees','crops', 'type_of_land','construction_type','created', 'updated']
 
     
 class CropSerializer(serializers.ModelSerializer):
     pap = serializers.SlugRelatedField(
-        read_only=True,
+        queryset = ProjectAffectedPerson.objects.all(),
         slug_field='first_name'
     )
     class Meta:
