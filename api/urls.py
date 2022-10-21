@@ -18,7 +18,6 @@ urlpatterns = [
     path('api/trees/<int:pk>/', views.TreeDetail.as_view(), name='tree-detail'),
     path('api/pap/', views.ProjectAffectedPersonList.as_view(), name='pap-list'),
     path('api/pap/<int:pk>/', views.ProjectAffectedPersonDetail.as_view(), name='pap-detail'),
-    path('api/pap/<int:pk>/highlight', views.ProjectAffectedPersonHighlight.as_view(), name='pap-highlight')
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

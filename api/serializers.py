@@ -1,5 +1,6 @@
 from unicodedata import category
 from rest_framework import serializers
+from rest_framework.reverse import reverse
 from .models import *
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -54,6 +55,7 @@ class CropSerializer(serializers.ModelSerializer):
         queryset = ProjectAffectedPerson.objects.all(),
         slug_field='first_name'
     )
+    
     class Meta:
         model = Crop
         fields = ['name', 'description', 'quantity','quality', 'price', 'rating', 'pap']

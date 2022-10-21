@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status, generics, renderers
 from rest_framework.decorators import api_view
 from rest_framework.reverse import reverse
+from rest_framework import viewsets
 
 @api_view(['GET'])
 def api_root(request, format = None):
@@ -79,55 +80,24 @@ class SubcategoryDetail(APIView):
 
 # Create your views here.
 # Crop
-class CropList(APIView):
-    """
-    List all crops, or create a crop.
-    """
-    def get(self, request, format=None):
-        crops = Crop.objects.all()
-        serializer = CropSerializer(crops, many=True)
-        return Response(serializer.data)
+class CropList(generics.ListCreateAPIView):
+    queryset = Crop.objects.all().order_by('name')
+    serializer_class = CropSerializer
 
-    def post(self, request, format=None):
-        serializer = CropSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-   
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
-class CropDetail(APIView):
-    """
-    Retrieve, update or delete a crop instance.
-    """
-    def get_object(self, pk):
-        try:
-            return Crop.objects.get(pk=pk)
-        except Crop.DoesNotExist:
-            raise Http404
 
-    def get(self, request, pk, format=None):
-        crop = self.get_object(pk)
-        serializer = CropSerializer(crop)
-        return Response(serializer.data)
+class CropDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Crop.objects.all().order_by('name')
+    serializer_class = CropSerializer
 
-    def put(self, request, pk, format=None):
-        crop = self.get_object(pk)
-        serializer = CropSerializer(crop, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        crop = self.get_object(pk)
-        crop.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 #projected affected person
 class ProjectAffectedPersonList(generics.ListCreateAPIView):
-    queryset = ProjectAffectedPerson.objects.all()
+    queryset = ProjectAffectedPerson.objects.all().order_by('-created')
     serializer_class = ProjectAffectedPersonSerializer
 
     def perform_create(self, serializer):
@@ -135,51 +105,41 @@ class ProjectAffectedPersonList(generics.ListCreateAPIView):
 
 
 class ProjectAffectedPersonDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = ProjectAffectedPerson.objects.all()
+    queryset = ProjectAffectedPerson.objects.all().order_by('-created')
     serializer_class = ProjectAffectedPersonSerializer
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-        
-class ProjectAffectedPersonHighlight(generics.GenericAPIView):
-    queryset = ProjectAffectedPerson.objects.all()
-    renderer_classes = [renderers.StaticHTMLRenderer]
-
-    def get(self, request, *args, **kwargs):
-        pap = self.get_object()
-        return Response(pap.highlighted)
-
-
 
 
 #Land
 class LandList(generics.ListCreateAPIView):
-    queryset = Land.objects.all()
+    queryset = Land.objects.all().order_by('name')
     serializer_class = LandSerializer
 
 
 class LandDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Land.objects.all()
+    queryset = Land.objects.all().order_by('name')
     serializer_class = LandSerializer
 
 #Construction
 class ConstructionBuildingList(generics.ListCreateAPIView):
-    queryset = ConstructionBuilding.objects.all()
+    queryset = ConstructionBuilding.objects.all().order_by('name')
     serializer_class = ConstructionBuildingSerializer
 
 
 class ConstructionBuildingDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = ConstructionBuilding.objects.all()
+    queryset = ConstructionBuilding.objects.all().order_by('name')
     serializer_class = ConstructionBuildingSerializer
 
 #Construction
 class TreeList(generics.ListCreateAPIView):
-    queryset = Tree.objects.all()
+    queryset = Tree.objects.all().order_by('name')
     serializer_class = TreeSerializer
 
 
 class TreeDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Tree.objects.all()
+    queryset = Tree.objects.all().order_by('name')
     serializer_class = TreeSerializer
 
 
