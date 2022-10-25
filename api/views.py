@@ -79,6 +79,25 @@ class SubcategoryDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+#Construction
+class ConstructionBuildingList(generics.ListCreateAPIView):
+    queryset = ConstructionBuilding.objects.all().order_by('name')
+    serializer_class = ConstructionBuildingSerializer
+
+
+class ConstructionBuildingDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ConstructionBuilding.objects.all().order_by('name')
+    serializer_class = ConstructionBuildingSerializer
+
+#Construction
+class TreeList(generics.ListCreateAPIView):
+    queryset = Tree.objects.all().order_by('name')
+    serializer_class = TreeSerializer
+
+
+class TreeDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Tree.objects.all().order_by('name')
+    serializer_class = TreeSerializer
 
 
 # Create your views here.
@@ -133,6 +152,15 @@ class PapCrop(APIView):
         user = self.request.user
         return ProjectAffectedPerson.objects.filter(owner=user).order_by('-created')
 
+#Land
+class LandList(generics.ListCreateAPIView):
+    queryset = Land.objects.all().order_by('name')
+    serializer_class = LandSerializer
+
+
+class LandDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Land.objects.all().order_by('name')
+    serializer_class = LandSerializer
 
             
 #projected affected person
@@ -161,35 +189,32 @@ class ProjectAffectedPersonDetail(generics.RetrieveUpdateDestroyAPIView):
         user = self.request.user
         return ProjectAffectedPerson.objects.filter(owner=user).order_by('-created')
 
+#Project Affected Person's land
+class PAPLandList(generics.ListCreateAPIView):
+    queryset = PAPLand.objects.all().order_by('-created')
+    serializer_class = PAPLandSerializer
 
-#Land
-class LandList(generics.ListCreateAPIView):
-    queryset = Land.objects.all().order_by('name')
-    serializer_class = LandSerializer
-
-
-class LandDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Land.objects.all().order_by('name')
-    serializer_class = LandSerializer
-
-#Construction
-class ConstructionBuildingList(generics.ListCreateAPIView):
-    queryset = ConstructionBuilding.objects.all().order_by('name')
-    serializer_class = ConstructionBuildingSerializer
+    def get_queryset(self):
+        """
+        This view should return a list of all the project_affected_person land
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        return PAPLand.objects.filter(owner=user).order_by('-created')
 
 
-class ConstructionBuildingDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = ConstructionBuilding.objects.all().order_by('name')
-    serializer_class = ConstructionBuildingSerializer
+class PAPLandDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = PAPLand.objects.all().order_by('-created')
+    serializer_class = PAPLandSerializer
 
-#Construction
-class TreeList(generics.ListCreateAPIView):
-    queryset = Tree.objects.all().order_by('name')
-    serializer_class = TreeSerializer
+    def get_queryset(self):
+        """
+        This view should return a list of all the project_affected_person land details
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        return PAPLand.objects.filter(owner=user).order_by('-created')
 
 
-class TreeDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Tree.objects.all().order_by('name')
-    serializer_class = TreeSerializer
 
 

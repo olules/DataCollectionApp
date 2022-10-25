@@ -1,3 +1,4 @@
+from attr import fields
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 from .models import *
@@ -59,6 +60,20 @@ class CropSerializer(serializers.ModelSerializer):
     class Meta:
         model = Crop
         fields = ['name', 'description', 'quantity','quality', 'price', 'rating', 'pap']
+
+class PAPLandSerializer(serializers.ModelSerializer):
+    type_of_land = serializers.SlugRelatedField(
+        queryset = Land.objects.all(),
+        slug_field='name'
+    )
+    owner = serializers.SlugRelatedField(
+        queryset = ProjectAffectedPerson.objects.all(),
+        slug_field='first_name'
+    )
+    class Meta:
+        model = PAPLand
+        fields = ['type_of_land', 'survey_no', 'owner','tenure', 'size', 'location', 'land_use', 
+                    'land_services', 'rate', 'created', 'updated']
 
     
 
