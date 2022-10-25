@@ -7,7 +7,9 @@ from rest_framework.response import Response
 from rest_framework import status, generics, renderers
 from rest_framework.decorators import api_view
 from rest_framework.reverse import reverse
-from rest_framework import viewsets
+from rest_framework import authentication, permissions
+from django.contrib.auth.models import User
+
 
 @api_view(['GET'])
 def api_root(request, format = None):
@@ -18,6 +20,7 @@ def api_root(request, format = None):
       'paps': reverse('pap-list', request = request, format = format),
       'crops': reverse('crop-list', request = request, format = format)
    })
+
 
 # Create your views here.
 # Category
@@ -81,35 +84,82 @@ class SubcategoryDetail(APIView):
 # Create your views here.
 # Crop
 class CropList(generics.ListCreateAPIView):
-    queryset = Crop.objects.all().order_by('name')
+    queryset = Crop.objects.all().order_by('rating')
     serializer_class = CropSerializer
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+    def get_queryset(self):
+        """
+        This view should return a list of all the crops
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        return Crop.objects.filter(owner=user).order_by('rating')
+
 
 
 class CropDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Crop.objects.all().order_by('name')
+    queryset = Crop.objects.all().order_by('rating')
     serializer_class = CropSerializer
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+    def get_queryset(self):
+        """
+        This view should return a list of all the crop details
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        return Crop.objects.filter(owner=user).order_by('rating')
 
+
+#pap_crops
+# ViewSets define the view behavior.
+class PapCrop(APIView):
+    """
+    View to list all crops belonging to a pap in the system.
+    """
+    try:
+        def get(self, request,first_name,format=None):
+            pap = ProjectAffectedPerson.objects.get(first_name=first_name)
+            pap_crops = Crop.objects.filter(pap=pap)
+            serializer = CropSerializer(pap_crops, many=True)
+            return Response(serializer.data)
+    except Crop.DoesNotExist:
+            raise Http404
+    
+    def get_queryset(self):
+        """
+        This view should return a list of all the paps
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        return ProjectAffectedPerson.objects.filter(owner=user).order_by('-created')
+
+
+            
 #projected affected person
 class ProjectAffectedPersonList(generics.ListCreateAPIView):
     queryset = ProjectAffectedPerson.objects.all().order_by('-created')
     serializer_class = ProjectAffectedPersonSerializer
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+    def get_queryset(self):
+        """
+        This view should return a list of all the project_affected_persons
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        return ProjectAffectedPerson.objects.filter(owner=user).order_by('-created')
 
 
 class ProjectAffectedPersonDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ProjectAffectedPerson.objects.all().order_by('-created')
     serializer_class = ProjectAffectedPersonSerializer
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+    def get_queryset(self):
+        """
+        This view should return a list of all the project_affected_person_details
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        return ProjectAffectedPerson.objects.filter(owner=user).order_by('-created')
 
 
 #Land

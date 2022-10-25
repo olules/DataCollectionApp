@@ -1,7 +1,7 @@
-from unicodedata import category
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 from .models import *
+from rest_framework import permissions
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,7 +47,7 @@ class ProjectAffectedPersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectAffectedPerson
         fields = ['first_name', 'last_name', 'age', 'address', 'id_no', 'email','phone_number', 
-        'trees','crops', 'type_of_land','construction_type','created', 'updated']
+        'trees','crops', 'type_of_land','construction_type','created', 'updated','owner']
 
     
 class CropSerializer(serializers.ModelSerializer):

@@ -84,10 +84,10 @@ class ProjectAffectedPerson(models.Model):
     construction_type = models.ForeignKey(ConstructionBuilding, on_delete=models.CASCADE, related_name='construction')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    owner = models.ForeignKey('auth.User', related_name='pap', on_delete=models.CASCADE)
+    owner = models.ForeignKey('auth.User', related_name='owners', on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name} {self.address}"
+        return f"{self.first_name} { self.last_name} { self.address}"
 
 
 

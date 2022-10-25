@@ -28,5 +28,5 @@ urlpatterns = [
         name='password_reset_confirm'),
     path('api/v1/dj-rest-auth/', include('dj_rest_auth.urls')), # new
     path('api/v1/dj-rest-auth/registration/', 
-                    include('dj_rest_auth.registration.urls')), # new
+                    include('dj_rest_auth.registration.urls'), name='registration') # new
 ]
