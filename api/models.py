@@ -124,7 +124,7 @@ class PAPLand(models.Model):
     )
     type_of_land = models.ForeignKey(Land, on_delete=models.CASCADE, related_name='pap_land')
     survey_no = models.CharField(max_length=200, blank=True, null=True)
-    owner = models.ForeignKey(ProjectAffectedPerson, related_name='land_owners', on_delete=models.CASCADE)
+    pap_name = models.ForeignKey(ProjectAffectedPerson, related_name='land_owners', on_delete=models.CASCADE)
     tenure = models.CharField(max_length=20, choices = TENURE_TYPES)
     size = models.PositiveBigIntegerField()
     location = models.CharField(max_length=255)
@@ -133,6 +133,7 @@ class PAPLand(models.Model):
     rate = models.PositiveIntegerField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    owner = models.ForeignKey('auth.User', related_name='paplands', on_delete=models.CASCADE)
 
 
 

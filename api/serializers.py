@@ -66,13 +66,13 @@ class PAPLandSerializer(serializers.ModelSerializer):
         queryset = Land.objects.all(),
         slug_field='name'
     )
-    owner = serializers.SlugRelatedField(
+    pap_land = serializers.SlugRelatedField(
         queryset = ProjectAffectedPerson.objects.all(),
         slug_field='first_name'
     )
     class Meta:
         model = PAPLand
-        fields = ['type_of_land', 'survey_no', 'owner','tenure', 'size', 'location', 'land_use', 
+        fields = ['type_of_land', 'survey_no', 'pap_name','tenure', 'size', 'location', 'land_use', 
                     'land_services', 'rate', 'created', 'updated']
 
     
