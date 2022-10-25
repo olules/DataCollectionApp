@@ -37,19 +37,6 @@ class Subcategory(models.Model):
         return self.name
 
 
-class Land(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.TextField(max_length=256, blank=True)
-    price = models.PositiveIntegerField(null=True, blank=True)
-
-    class Meta:
-        ordering = ('name',)
-        verbose_name = 'land'
-        verbose_name_plural = 'land'
-
-    def __str__(self):
-        return self.name
-
 class ConstructionBuilding(models.Model):
     name = models.CharField(max_length=128)
     description = models.TextField(max_length=256, blank=True)
@@ -62,6 +49,19 @@ class Tree(models.Model):
     name = models.CharField(max_length=128)
     description = models.TextField(max_length=256, blank=True)
     price = models.PositiveIntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+class Land(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.TextField(max_length=256, blank=True)
+    price = models.PositiveIntegerField(null=True, blank=True)
+
+    class Meta:
+        ordering = ('name',)
+        verbose_name = 'land'
+        verbose_name_plural = 'land'
 
     def __str__(self):
         return self.name
@@ -108,9 +108,31 @@ class Crop(models.Model):
     rating = models.PositiveIntegerField(null=True, blank=True)
     pap = models.ForeignKey(ProjectAffectedPerson, related_name='project_affected_persons',on_delete=models.CASCADE)
     owner = models.ForeignKey('auth.User', related_name='users', on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} {self.pap} {self.quantity}"
+
+
+class PAPLand(models.Model):
+    TENURE_TYPES= (
+        ('Mailo Land', 'Mailo Land'),
+        ('Freehold Land', 'Freehold Land'),
+        ('Lease Land', 'Lease Land'),
+        ('Customary Land', 'Customer Land')
+    )
+    type_of_land = models.ForeignKey(Land, on_delete=models.CASCADE, related_name='pap_land')
+    survey_no = models.CharField(max_length=200, blank=True, null=True)
+    owner = models.ForeignKey(ProjectAffectedPerson, related_name='land_owners', on_delete=models.CASCADE)
+    tenure = models.CharField(max_length=20, choices = TENURE_TYPES)
+    size = models.PositiveBigIntegerField()
+    location = models.CharField(max_length=255)
+    land_use = models.TextField(blank=True, null=True)
+    land_services  = models.TextField(blank=True, null=True)
+    rate = models.PositiveIntegerField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
 
 
