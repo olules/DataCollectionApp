@@ -4,12 +4,12 @@ from api.serializers import *
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, generics, renderers
+from rest_framework import status, generics, renderers, filters
 from rest_framework.decorators import api_view
 from rest_framework.reverse import reverse
-from rest_framework import authentication, permissions
-from django.contrib.auth.models import User
-
+import django_filters.rest_framework
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET'])
 def api_root(request, format = None):
@@ -25,16 +25,25 @@ def api_root(request, format = None):
 # Create your views here.
 # Category
 class CategoryList(generics.ListCreateAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
 
 class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
     queryset = Category.objects.all()
     serializer_class = SubcategorySerializer
 
 #Subcategory
 class SubcategoryList(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
     """
     List all subcategories, or create a subcategory.
     """
@@ -51,6 +60,9 @@ class SubcategoryList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class SubcategoryDetail(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
     """
     Retrieve, update or delete a subcategory instance.
     """
@@ -81,21 +93,39 @@ class SubcategoryDetail(APIView):
 
 #Construction
 class ConstructionBuildingList(generics.ListCreateAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
     queryset = ConstructionBuilding.objects.all().order_by('name')
     serializer_class = ConstructionBuildingSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
+
 
 
 class ConstructionBuildingDetail(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
     queryset = ConstructionBuilding.objects.all().order_by('name')
     serializer_class = ConstructionBuildingSerializer
 
 #Construction
 class TreeList(generics.ListCreateAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
     queryset = Tree.objects.all().order_by('name')
     serializer_class = TreeSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
+
 
 
 class TreeDetail(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
     queryset = Tree.objects.all().order_by('name')
     serializer_class = TreeSerializer
 
@@ -103,20 +133,27 @@ class TreeDetail(generics.RetrieveUpdateDestroyAPIView):
 # Create your views here.
 # Crop
 class CropList(generics.ListCreateAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
     queryset = Crop.objects.all().order_by('rating')
     serializer_class = CropSerializer
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
 
     def get_queryset(self):
         """
-        This view should return a list of all the crops
+        This view should return a list of all the crop details
         for the currently authenticated user.
         """
         user = self.request.user
         return Crop.objects.filter(owner=user).order_by('rating')
+    
 
-
-
+    
 class CropDetail(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
     queryset = Crop.objects.all().order_by('rating')
     serializer_class = CropSerializer
 
@@ -129,9 +166,69 @@ class CropDetail(generics.RetrieveUpdateDestroyAPIView):
         return Crop.objects.filter(owner=user).order_by('rating')
 
 
+
+#Land
+class LandList(generics.ListCreateAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    queryset = Land.objects.all().order_by('name')
+    serializer_class = LandSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
+
+
+
+class LandDetail(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    queryset = Land.objects.all().order_by('name')
+    serializer_class = LandSerializer
+
+            
+#projected affected person
+class ProjectAffectedPersonList(generics.ListCreateAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    queryset = ProjectAffectedPerson.objects.all().order_by('-created')
+    serializer_class = ProjectAffectedPersonSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['first_name', 'id_no']
+
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the project_affected_persons
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        return ProjectAffectedPerson.objects.filter(owner=user).order_by('-created')
+
+    
+    
+
+class ProjectAffectedPersonDetail(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    queryset = ProjectAffectedPerson.objects.all().order_by('-created')
+    serializer_class = ProjectAffectedPersonSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the project_affected_person_details
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        return ProjectAffectedPerson.objects.filter(owner=user).order_by('-created')
+
 #pap_crops
 # ViewSets define the view behavior.
 class PapCrop(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
     """
     View to list all crops belonging to a pap in the system.
     """
@@ -151,48 +248,16 @@ class PapCrop(APIView):
         """
         user = self.request.user
         return ProjectAffectedPerson.objects.filter(owner=user).order_by('-created')
-
-#Land
-class LandList(generics.ListCreateAPIView):
-    queryset = Land.objects.all().order_by('name')
-    serializer_class = LandSerializer
-
-
-class LandDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Land.objects.all().order_by('name')
-    serializer_class = LandSerializer
-
-            
-#projected affected person
-class ProjectAffectedPersonList(generics.ListCreateAPIView):
-    queryset = ProjectAffectedPerson.objects.all().order_by('-created')
-    serializer_class = ProjectAffectedPersonSerializer
-
-    def get_queryset(self):
-        """
-        This view should return a list of all the project_affected_persons
-        for the currently authenticated user.
-        """
-        user = self.request.user
-        return ProjectAffectedPerson.objects.filter(owner=user).order_by('-created')
-
-
-class ProjectAffectedPersonDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = ProjectAffectedPerson.objects.all().order_by('-created')
-    serializer_class = ProjectAffectedPersonSerializer
-
-    def get_queryset(self):
-        """
-        This view should return a list of all the project_affected_person_details
-        for the currently authenticated user.
-        """
-        user = self.request.user
-        return ProjectAffectedPerson.objects.filter(owner=user).order_by('-created')
+    
 
 #Project Affected Person's land
 class PAPLandList(generics.ListCreateAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
     queryset = PAPLand.objects.all().order_by('-created')
     serializer_class = PAPLandSerializer
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
 
     def get_queryset(self):
         """
@@ -204,6 +269,9 @@ class PAPLandList(generics.ListCreateAPIView):
 
 
 class PAPLandDetail(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
     queryset = PAPLand.objects.all().order_by('-created')
     serializer_class = PAPLandSerializer
 
@@ -214,6 +282,34 @@ class PAPLandDetail(generics.RetrieveUpdateDestroyAPIView):
         """
         user = self.request.user
         return PAPLand.objects.filter(owner=user).order_by('-created')
+
+#pap_land
+# ViewSets define the view behavior.
+class PapLandView(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    """
+    View to list all land belonging to a particular pap.
+    """
+    try:
+        def get(self, request,first_name,format=None):
+            pap = ProjectAffectedPerson.objects.get(first_name=first_name)
+            pap_land = PAPLand.objects.filter(pap=pap)
+            serializer = PAPLandSerializer(pap_land, many=True)
+            return Response(serializer.data)
+    except PAPLand.DoesNotExist:
+            raise Http404
+    
+    def get_queryset(self):
+        """
+        This view should return a list of all the paps
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        return ProjectAffectedPerson.objects.filter(owner=user).order_by('-created')
+
 
 
 
