@@ -61,7 +61,7 @@ class ProjectAffectedPersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectAffectedPerson
         fields = ['first_name', 'last_name', 'age', 'address', 'id_no', 'email','phone_number', 
-        'trees','crops', 'type_of_land','construction_type','pap_crops', 'land_owners','created', 'updated']
+        'trees','crops', 'type_of_land','construction_type','pap_crops', 'pap_lands','created', 'updated']
 
     
 class CropSerializer(serializers.ModelSerializer):
