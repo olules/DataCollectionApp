@@ -120,7 +120,7 @@ class PAPLand(models.Model):
         ('Mailo Land', 'Mailo Land'),
         ('Freehold Land', 'Freehold Land'),
         ('Lease Land', 'Lease Land'),
-        ('Customary Land', 'Customer Land')
+        ('Customary Land', 'Customary Land')
     )
     type_of_land = models.ForeignKey(Land, on_delete=models.CASCADE, related_name='pap_land')
     survey_no = models.CharField(max_length=200, blank=True, null=True)
