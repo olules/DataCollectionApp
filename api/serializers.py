@@ -30,6 +30,12 @@ class TreeSerializer(serializers.ModelSerializer):
         fields = ['name']
 
 class ProjectAffectedPersonSerializer(serializers.ModelSerializer):
+    pap_crops = serializers.HyperlinkedRelatedField(
+        many=True,
+        read_only=True,
+        view_name='crop-detail'
+    )
+
     trees = serializers.SlugRelatedField(
         queryset = Tree.objects.all(),
         slug_field='name',
@@ -45,17 +51,18 @@ class ProjectAffectedPersonSerializer(serializers.ModelSerializer):
         slug_field='name'
     )
 
-    
+
     class Meta:
         model = ProjectAffectedPerson
         fields = ['first_name', 'last_name', 'age', 'address', 'id_no', 'email','phone_number', 
-        'trees','crops', 'type_of_land','construction_type','created', 'updated']
+        'trees','crops', 'type_of_land','construction_type','pap_crops', 'created', 'updated']
 
     
 class CropSerializer(serializers.ModelSerializer):
     pap = serializers.SlugRelatedField(
         queryset = ProjectAffectedPerson.objects.all(),
-        slug_field='first_name'
+        slug_field='first_name',
+        style={'base_template': 'input.html'}
     )
     
     class Meta:

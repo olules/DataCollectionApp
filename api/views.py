@@ -140,6 +140,20 @@ class CropList(generics.ListCreateAPIView):
     serializer_class = CropSerializer
     filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
 
+    
+    def create(self, request, *args, **kwargs):
+        owner = request.user
+        data = {
+            "pap": request.POST.get('pap', None),
+            "owner": owner.id,
+            }
+        _serializer = self.serializer_class(data=data)  # NOQA
+        if _serializer.is_valid():
+            _serializer.save()
+            return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
+        else:
+            return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)  # NOQA
+    
     def get_queryset(self):
         """
         This view should return a list of all the crop details
@@ -147,6 +161,7 @@ class CropList(generics.ListCreateAPIView):
         """
         user = self.request.user
         return Crop.objects.filter(owner=user).order_by('rating')
+    
     
 
     
