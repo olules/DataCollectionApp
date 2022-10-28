@@ -323,7 +323,7 @@ class PapLandView(APIView):
         for the currently authenticated user.
         """
         user = self.request.user
-        return ProjectAffectedPerson.objects.filter(owner=user).order_by('-created')
+        return PAPLand.objects.filter(owner=user).order_by('-created')
 
 
 
