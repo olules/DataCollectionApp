@@ -87,7 +87,7 @@ class ProjectAffectedPerson(models.Model):
     owner = models.ForeignKey('auth.User', related_name='owners', on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.first_name} { self.last_name} { self.address}"
+        return f"{self.first_name}"
 
 
 
@@ -101,11 +101,11 @@ class Crop(models.Model):
     )
     subcategory = models.ForeignKey(Subcategory,related_name='subcategories',on_delete=models.CASCADE)
     name = models.CharField(max_length=60)
-    description = models.TextField(max_length=256, blank=True, null=True)
+    description = models.TextField(max_length=256, blank=True,)
     quantity = models.PositiveIntegerField()
     quality = models.CharField(max_length=13, choices = QUALITY_CHOICES)
-    price = models.PositiveIntegerField(null=True, blank=True)
-    rating = models.PositiveIntegerField(null=True, blank=True)
+    price = models.PositiveIntegerField()
+    rating = models.PositiveIntegerField()
     pap = models.ForeignKey(ProjectAffectedPerson, related_name='pap_crops',on_delete=models.CASCADE)
     owner = models.ForeignKey('auth.User', related_name='users', on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -123,13 +123,13 @@ class PAPLand(models.Model):
         ('Customary Land', 'Customary Land')
     )
     type_of_land = models.ForeignKey(Land, on_delete=models.CASCADE, related_name='pap_land')
-    survey_no = models.CharField(max_length=200, blank=True, null=True)
+    survey_no = models.CharField(max_length=200, blank=True)
     pap = models.ForeignKey(ProjectAffectedPerson, related_name='land_owners', on_delete=models.CASCADE)
     tenure = models.CharField(max_length=20, choices = TENURE_TYPES)
     size = models.PositiveBigIntegerField()
     location = models.CharField(max_length=255)
-    land_use = models.TextField(blank=True, null=True)
-    land_services  = models.TextField(blank=True, null=True)
+    land_use = models.TextField(blank=True,)
+    land_services  = models.TextField(blank=True,)
     rate = models.PositiveIntegerField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

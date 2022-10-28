@@ -62,7 +62,7 @@ class CropSerializer(serializers.ModelSerializer):
     pap = serializers.SlugRelatedField(
         queryset = ProjectAffectedPerson.objects.all(),
         slug_field='first_name',
-        style={'base_template': 'input.html'}
+        style={'base_template': 'input.html','input_type': 'text', 'placeholder': 'pap_name', 'required':True}   
     )
     
     class Meta:
@@ -74,13 +74,14 @@ class PAPLandSerializer(serializers.ModelSerializer):
         queryset = Land.objects.all(),
         slug_field='name'
     )
-    pap_name = serializers.SlugRelatedField(
+    pap = serializers.SlugRelatedField(
         queryset = ProjectAffectedPerson.objects.all(),
-        slug_field='first_name'
+        slug_field='first_name',
+        style={'base_template': 'input.html'}
     )
     class Meta:
         model = PAPLand
-        fields = ['type_of_land', 'survey_no', 'pap_name','tenure', 'size', 'location', 'land_use', 
+        fields = ['type_of_land', 'survey_no', 'pap','tenure', 'size', 'location', 'land_use', 
                     'land_services', 'rate', 'created', 'updated']
 
     
